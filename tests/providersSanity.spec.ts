@@ -1,7 +1,6 @@
 import { test, expect } from './fixtures';
-import fs from 'fs';
-import { config } from 'dotenv'
-import 'dotenv/config'
+import { config } from 'dotenv';
+import 'dotenv/config';
 
 // --- Types ---
 interface Provider {
@@ -79,67 +78,66 @@ const setupPageListeners = (page: Page) => {
 };
 
 // --- Test Suite ---
-test('AI Provider Access Tests', async ({ page }, testInfo) => {
-  await test.step('login to extention', async () => {
-    await page.goto(`chrome-extension://iidnankcocecmgpcafggbgbmkbcldmno/html/popup.html`);
-    await page.locator('#apiDomain').click({ timeout: 15000 });
-    await page.locator('#apiDomain').fill(process.env.DOMAIN);
-    await page.locator('#apiKey').click({ timeout: 15000 });
-    await page.locator('#apiKey').fill(process.env.KEY);
-    await page.locator('#saveButton').click({ timeout: 15000 });
-  });
+test.describe('AI Provider Access Tests', () => {
   for (const provider of PROVIDERS) {
-    await test.step(`testing provider ${provider.name}`, async () => {
+    test(`${provider.name} Provider Access Test`, async ({ page }, testInfo) => {
+      // Step 1: Login to the extension before validating provider
+      await test.step('Login to extension', async () => {
+        await page.goto(`chrome-extension://iidnankcocecmgpcafggbgbmkbcldmno/html/popup.html`);
+        await page.locator('#apiDomain').click({ timeout: 15000 });
+        await page.locator('#apiDomain').fill(process.env.DOMAIN);
+        await page.locator('#apiKey').click({ timeout: 15000 });
+        await page.locator('#apiKey').fill(process.env.KEY);
+        await page.locator('#saveButton').click({ timeout: 15000 });
+      });
 
-    // Setup
-    const logs = setupPageListeners(page);
+      // Step 2: Setup logs for debugging
+      const logs = setupPageListeners(page);
 
-    // Test Steps
-    await test.step('open provider url', async () => {
-      await page.goto(`http://${provider.domain}`, { timeout: 15000 });
-    });
+      // Step 3: Open provider URL
+      await test.step(`Open ${provider.name} URL`, async () => {
+        await page.goto(`http://${provider.domain}`, { timeout: 15000 });
+      });
 
-    await test.step('check access message', async () => {
-      const accessDeniedLocator = page.locator('div:text("Access Denied")');
-      console.log(await accessDeniedLocator.isVisible({ timeout: 5000 }), 11111);
+      // Step 4: Validate access
+      await test.step(`Validate access for ${provider.name}`, async () => {
+        const accessDeniedLocator = page.locator('div:text("Access Denied")');
+        console.log(await accessDeniedLocator.isVisible({ timeout: 5000 }), `Checking ${provider.name}`);
 
-      if (provider.isBlocked) {
-        // Check blocked provider expectations
-        await expect(accessDeniedLocator).toBeVisible({ timeout: UI_TIMEOUT });
-        await expect(page.locator('html')).toMatchAriaSnapshot(`
-            - document:
-              - img
-              - text: Access Denied
-              - img
-              - img
-              - text: The domain ${provider.domain} was blocked by your administrator For more information visit the
-              - link "guidelines"
-              - text: "If you are sure this domain is safe, you can click “Access” and enter it Powered by:"
-              - link:
+        if (provider.isBlocked) {
+          // Expectations for blocked providers
+          await expect(accessDeniedLocator).toBeVisible({ timeout: UI_TIMEOUT });
+          await expect(page.locator('html')).toMatchAriaSnapshot(`
+              - document:
                 - img
-              - button "Access"
+                - text: Access Denied
+                - img
+                - img
+                - text: The domain ${provider.domain} was blocked by your administrator For more information visit the
+                - link "guidelines"
+                - text: "If you are sure this domain is safe, you can click “Access” and enter it Powered by:"
+                - link:
+                  - img
+                - button "Access"
             `);
 
-        // Validate URL parameters
-        const searchParams = Object.fromEntries(new URL(page.url()).searchParams);
-        expect(searchParams.domain).toContain(provider.domain);
-        expect(searchParams.type).toBe('blockPage');
-        expect(searchParams.canBypass).toBe('Allow');
-      } else {
-        // Check unblocked provider expectations
-        await expect(accessDeniedLocator).not.toBeVisible({ timeout: UI_TIMEOUT });
-        expect(await page.locator(provider.selectors.textbox).first()).toBeVisible();
-      }
+          // Validate URL parameters
+          const searchParams = Object.fromEntries(new URL(page.url()).searchParams);
+          expect(searchParams.domain).toContain(provider.domain);
+          expect(searchParams.type).toBe('blockPage');
+          expect(searchParams.canBypass).toBe('Allow');
+        } else {
+          // Expectations for unblocked providers
+          await expect(accessDeniedLocator).not.toBeVisible({ timeout: UI_TIMEOUT });
+          expect(await page.locator(provider.selectors.textbox).first()).toBeVisible();
+        }
+      });
+
+      // Step 5: Attach logs for debugging
+      await testInfo.attach('network_logs', {
+        body: JSON.stringify(logs, null, 2),
+        contentType: 'application/json'
+      });
     });
-    await testInfo.attach('network_logs', {
-      body: JSON.stringify(logs, null, 2),
-      contentType: 'application/json'
-    });
-    // Cleanup
-    // Uncomment these lines when ready to implement cleanup
-    // await page?.close();  // Removing explicit close as Playwright handles it automatically
-    // await browser?.close();  // Removing explicit close as Playwright handles it automatically
-  })
   }
 });
-
