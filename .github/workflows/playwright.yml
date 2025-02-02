@@ -51,5 +51,5 @@ jobs:
       uses: thollander/actions-comment-pull-request@v3
       with:
         message: |
-          Playwright test results are available as HTML report: 
-          [Playwright HTML Report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/playwright-html-report)
+          📝 Playwright test results are available as an HTML report:  
+          [Playwright HTML Report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/)
