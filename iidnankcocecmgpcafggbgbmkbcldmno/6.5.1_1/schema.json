@@ -1,0 +1,68 @@
+{
+    "type": "object",
+    "properties": {
+        "apiDomain": {
+            "title": "Domain of the Prompt Security Protect API",
+            "description": "Configures the domain of the Protect API by Prompt Security",
+            "type": "string"
+        },
+        "apiKey": {
+            "title": "API key for the Prompt Security Protect API",
+            "description": "Configures the api key of the Protect API by Prompt Security",
+            "type": "string"
+        },
+        "policyName": {
+            "title": "Policy name to use - Optional",
+            "description": "Configures the policy name that should be used by Prompt Security",
+            "type": "string"
+        },
+        "idp": {
+            "title": "SSO IDP - Optional",
+            "description": "Configures which identity provider to use for SSO",
+            "type": "string"
+        },
+        "idpUrl": {
+            "title": "SSO IDP URL - Optional",
+            "description": "The URL of the identity provider to use for SSO",
+            "type": "string"
+        },
+        "idpClientId": {
+            "title": "SSO IDP Client ID - Optional",
+            "description": "The client id for the identity provider to use for SSO",
+            "type": "string"
+        },
+        "addCustomHttpHeader": {
+            "title": "Add Custom HTTP Header (true/false) - Optional",
+            "description": "Add a custom HTTP header to all requests (to detect incognito usage)",
+            "type": "string"
+        },
+        "ideIntegationPortNumber": {
+            "title": "IDE integration port number - Optional",
+            "description": "The port for detecting source code copied from the IDE and pasted into the browser",
+            "type": "integer"
+        },
+        "ideIntegationDontSendCode": {
+            "title": "IDE integration don't send code (true/false) - Optional",
+            "description": "Don't send source code copied from the IDE to Prompt Security's servers",
+            "type": "string"
+        },
+        "corporateDomains": {
+            "title": "Corporate Domains - Optional",
+            "description": "List of corporate domains",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "userName": {
+            "title": "User Name - Optional",
+            "description": "The username of the end user (can be set via MDM)",
+            "type": "string"
+        },
+        "machineName": {
+            "title": "Machine Name - Optional",
+            "description": "The machine name of the end user (can be set via MDM)",
+            "type": "string"
+        }
+    }
+}

@@ -1,5 +1,6 @@
-import { test, expect, Browser, Page, chromium, Locator } from '@playwright/test';
+import { test, expect } from './fixtures';
 import fs from 'fs';
+import 'dotenv/config'
 
 // --- Types ---
 interface Provider {
@@ -77,12 +78,24 @@ const setupPageListeners = (page: Page) => {
 };
 
 // --- Test Suite ---
-test.describe('AI Provider Access Tests', () => {
+test.describe('AI Provider Access Tests', async () => {
+  
   PROVIDERS.forEach(provider => {
-    test(`${provider.name} Access Tests`, async ({ }, testInfo) => {
+    test(`${provider.name} Access Tests`, async ({ page }, testInfo) => { // Removed explicit browser setup and pass page
+
+
+      await test.step('login to extention', async () => {
+        test.setTimeout(120000)
+        await page.goto(`chrome-extension://iidnankcocecmgpcafggbgbmkbcldmno/html/popup.html`);
+        await page.locator('#apiDomain').click();
+        await page.locator('#apiDomain').fill(process.env.DOMAIN);
+        await page.locator('#apiKey').click();
+        await page.locator('#apiKey').fill(process.env.KEY);
+        await page.getByRole('button', { name: 'Save' }).click();
+        await page.pause()
+      });
+
       // Setup
-      const browser = await chromium.connectOverCDP('http://localhost:9222');
-      const page = await browser.contexts()[0].newPage();
       const logs = setupPageListeners(page);
 
       // Test Steps
@@ -129,8 +142,8 @@ test.describe('AI Provider Access Tests', () => {
       });
       // Cleanup
       // Uncomment these lines when ready to implement cleanup
-      // await page?.close();
-      // await browser?.close();
+      // await page?.close();  // Removing explicit close as Playwright handles it automatically
+      // await browser?.close();  // Removing explicit close as Playwright handles it automatically
     });
   });
 });
