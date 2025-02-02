@@ -36,12 +36,13 @@ jobs:
             -u 1000 \
             playwright:1.1 bash -c "yarn xvfb:test"
 
-      - name: Upload Playwright Report
+      - name: Upload HTML Report as Artifact
+        id: upload-playwright-html-report
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: playwright-report
-          path: playwright-report/
+          name: playwright-html-report
+          path: playwright-report/index.html  # Upload only the index.html file
           retention-days: 30
 
       - name: Publish Test Results
@@ -52,6 +53,7 @@ jobs:
           files: playwright-report/**/*.xml
 
       - name: Check files before upload
+        if: always()
         run: ls -al playwright-report/
         
       - name: Upload HTML Report as Artifact
@@ -68,8 +70,5 @@ jobs:
         with:
           message: |
             🎭 **Playwright Test Report** is available:  
-            👉 [HTML Report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/)
-            👉 [HTML Report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/playwright-report)
-            🎭 **Playwright Test Report** is available:  
-            👉 [HTML Report](https://github.com/${{ github.repository }}/suites/${{ github.run_id }}/artifacts/${{ steps.upload-playwright-html-report.outputs.artifact_id }})
-            👉 [Direct Link to index.html](https://github.com/${{ github.repository }}/suites/${{ github.run_id }}/artifacts/${{ steps.upload-playwright-html-report.outputs.artifact_id }}/index.html)
+            👉 [Download HTML Report (ZIP)](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/${{ steps.upload-playwright-html-report.outputs.artifact_id }})
+            👉 [Download Report Artifact](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/${{ steps.upload-playwright-html-report.outputs.artifact_id }})
