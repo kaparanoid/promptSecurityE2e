@@ -2,13 +2,15 @@
 
 This test suite verifies access to various AI providers.
 
-**Docker execution:**
-1. update .env.example to .env
-2. npm docker:build
-3. npm docker:test
+**Docker Execution:**
 
-**Known Bugs:**
-- Perplexity AI URLs may include `www.` prefix, while others don't.
-- Console errors can occur when downloading logs on blocked or extension pages.
-- API requests to blocked domains can bypass the UI block (e.g., `fetch` from devtools).
-- Log download is only available for enabled provider page.
+1.  Update `.env.example` to `.env`.
+2.  Run `npm run docker:build`.
+3.  Run `npm run docker:test`.
+
+**Known Issues:**
+
+*   Perplexity AI URLs may include a `www.` prefix, while other provider URLs do not.
+*   Console errors may occur when downloading logs on blocked or extension pages.
+*   API requests to blocked domains can bypass the UI block (e.g., using `fetch` from developer tools).
+*   Log downloads are only available for the currently enabled provider page.
