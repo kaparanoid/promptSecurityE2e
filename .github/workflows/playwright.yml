@@ -38,6 +38,7 @@ jobs:
 
       - name: Upload Playwright Report
         uses: actions/upload-artifact@v4
+        id: upload-report
         if: always()
         with:
           name: playwright-report
@@ -51,19 +52,17 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           files: playwright-report/**/*.xml
 
-      - name: Upload HTML Report as Artifact
-        uses: actions/upload-artifact@v4
+      - name: Check files before upload
         if: always()
-        with:
-          name: playwright-html-report
-          path: playwright-report/index.html
-          retention-days: 30
+        run: ls -al playwright-report/
 
       - name: Comment PR with HTML Report Link
-        if: github.event_name == 'pull_request'
+        if: always()
         uses: thollander/actions-comment-pull-request@v3
         with:
           message: |
-            🎭 **Playwright Test Report** is available:  
-            👉 [HTML Report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/)
-            👉 [HTML Report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/playwright-report)
+            🎭 **Playwright Test Report** is available:
+            
+            👉 [Download ZIP](${{ steps.upload-report.outputs.artifact-url }})
+
+            ℹ️ To view the HTML report, download the ZIP and extract it. Then, open `index.html` in your browser.
