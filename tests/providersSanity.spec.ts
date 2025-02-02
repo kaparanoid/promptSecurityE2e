@@ -33,7 +33,7 @@ const PROVIDERS: Provider[] = [
   {
     name: "GPT",
     domain: "chat.openai.com",
-    isBlocked: true,
+    isBlocked: false,
     selectors: { accessDenied: "div:text('Access Denied')", textbox: 'textarea' }
   },
   {
@@ -81,18 +81,15 @@ const setupPageListeners = (page: Page) => {
 // --- Test Suite ---
 test('AI Provider Access Tests', async ({ page }, testInfo) => {
   await test.step('login to extention', async () => {
-    await page.waitForTimeout(5000);
     await page.goto(`chrome-extension://iidnankcocecmgpcafggbgbmkbcldmno/html/popup.html`);
     await page.locator('#apiDomain').click({ timeout: 15000 });
     await page.locator('#apiDomain').fill(process.env.DOMAIN);
     await page.locator('#apiKey').click({ timeout: 15000 });
+    await page.locator('#apiKey').fill(process.env.KEY);
     await page.locator('#saveButton').click({ timeout: 15000 });
-    await page.waitForTimeout(5000); // need chack network auth event
   });
   for (const provider of PROVIDERS) {
-
-
-
+    await test.step(`testing provider ${provider.name}`, async () => {
 
     // Setup
     const logs = setupPageListeners(page);
@@ -142,6 +139,7 @@ test('AI Provider Access Tests', async ({ page }, testInfo) => {
     // Uncomment these lines when ready to implement cleanup
     // await page?.close();  // Removing explicit close as Playwright handles it automatically
     // await browser?.close();  // Removing explicit close as Playwright handles it automatically
+  })
   }
 });
 
