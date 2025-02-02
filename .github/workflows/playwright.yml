@@ -60,12 +60,10 @@ jobs:
           retention-days: 30
 
       - name: Comment PR with HTML Report Link
-        if: github.event_name == 'pull_request'
+        if: always()
         uses: thollander/actions-comment-pull-request@v3
         with:
           message: |
             🎭 **Playwright Test Report** is available:  
-            👉 **Download it from GitHub Actions Artifacts**  
-            1. Go to [Actions](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})  
-            2. Click on `playwright-html-report`  
-            3. Download and open `index.html`  
+            👉 [HTML Report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/)
+            👉 [HTML Report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/playwright-report)
