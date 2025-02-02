@@ -19,10 +19,10 @@ jobs:
 
     - name: Set correct permissions
       run: sudo chown -R 1000:1000 $GITHUB_WORKSPACE
-      
+
     - name: Run Playwright tests in Docker
       run: |
-        docker run  --rm -v $(pwd):/app -e DOMAIN="${{ secrets.DOMAIN }}" -e KEY="${{ secrets.KEY }}" -u 1000 playwright:1.1 bash -c "npx playwright test"
+        docker run  --rm -v $(pwd):/app -e DOMAIN="${{ secrets.DOMAIN }}" -e KEY="${{ secrets.KEY }}" -u 1000 playwright:1.1 bash -c "xvfb-run npx playwright test"
 
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
