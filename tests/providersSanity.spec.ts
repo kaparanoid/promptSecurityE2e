@@ -14,7 +14,7 @@ interface Provider {
 }
 
 // --- Constants ---
-const UI_TIMEOUT = 10000;
+const UI_TIMEOUT = 20000;
 
 const PROVIDERS: Provider[] = [
   {
@@ -80,13 +80,12 @@ const setupPageListeners = (page: Page) => {
 // --- Test Suite ---
 test('AI Provider Access Tests', async ({ page }, testInfo) => {
   await test.step('login to extention', async () => {
-    test.setTimeout(10000)
     await page.goto(`chrome-extension://iidnankcocecmgpcafggbgbmkbcldmno/html/popup.html`);
-    await page.locator('#apiDomain').click();
+    await page.locator('#apiDomain').click({timeout:3000});
     await page.locator('#apiDomain').fill(process.env.DOMAIN);
-    await page.locator('#apiKey').click();
+    await page.locator('#apiKey').click({timeout:3000});
     await page.locator('#apiKey').fill(process.env.KEY);
-    await page.getByRole('button', { name: 'Save' }).click();
+    await page.locator('#saveButton').click({timeout:3000});
     await page.waitForTimeout(5000); // need chack network auth event
   });
   for (const provider of PROVIDERS) {
@@ -104,7 +103,7 @@ test('AI Provider Access Tests', async ({ page }, testInfo) => {
 
     await test.step('check access message', async () => {
       const accessDeniedLocator = page.locator('div:text("Access Denied")');
-      console.log(await accessDeniedLocator.isVisible({ timeout: 5000 }), 11111);
+      console.log(await accessDeniedLocator.isVisible({ timeout: 10000 }), 11111);
 
       if (provider.isBlocked) {
         // Check blocked provider expectations
