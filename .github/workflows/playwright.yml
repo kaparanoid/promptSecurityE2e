@@ -37,3 +37,19 @@ jobs:
       with:
         files: |
           playwright-report/**/*.xml
+
+    - name: Upload HTML Report as Artifact
+      uses: actions/upload-artifact@v4
+      if: ${{ !cancelled() }}
+      with:
+        name: playwright-html-report
+        path: playwright-report/index.html
+        retention-days: 30
+
+    - name: Comment PR with HTML Report Link
+      if: github.event_name == 'pull_request'
+      uses: thollander/actions-comment-pull-request@v3
+      with:
+        message: |
+          Playwright test results are available as HTML report: 
+          [Playwright HTML Report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/playwright-html-report)
