@@ -26,13 +26,13 @@ const PROVIDERS: Provider[] = [
   {
     name: "Gemini",
     domain: "gemini.google.com",
-    isBlocked: false,
+    isBlocked: true,
     selectors: { accessDenied: "div:text('Access Denied')", textbox: 'textarea' }
   },
   {
     name: "GPT",
     domain: "chat.openai.com",
-    isBlocked: false,
+    isBlocked: true,
     selectors: { accessDenied: "div:text('Access Denied')", textbox: 'textarea' }
   },
   {
@@ -129,7 +129,6 @@ test.describe('AI Provider Access Tests', async () => {
           expect(searchParams.domain).toContain(provider.domain);
           expect(searchParams.type).toBe('blockPage');
           expect(searchParams.canBypass).toBe('Allow');
-          console.log(logs)
         } else {
           // Check unblocked provider expectations
           await expect(accessDeniedLocator).not.toBeVisible({ timeout: UI_TIMEOUT });

@@ -12,7 +12,8 @@
     "test": "./node_modules/.bin/playwright test",
     "docker:build": "cd docker;docker build -t playwright:1.1 .",
     "docker:test": "docker run -it --rm -v $(pwd):/app -u 1000 playwright:1.1",
-    "xvfb:test":"DISPLAY=:0 xvfb-run ./node_modules/.bin/playwright test"
+    "xvfb:test":"DISPLAY=:0 xvfb-run ./node_modules/.bin/playwright test",
+    "reports":"npx playwright show-report"
   },
   "dependencies": {
     "dotenv": "^16.4.7"
