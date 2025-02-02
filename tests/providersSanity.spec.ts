@@ -1,13 +1,9 @@
 import { test, expect } from './fixtures';
 import fs from 'fs';
-import {config} from 'dotenv'
+import { config } from 'dotenv'
 const envConfig = config();
 
-if (envConfig.error) {
-    console.error("Error loading .env file:", envConfig.error);
-} else {
-  process.env = { ...process.env, ...envConfig.parsed };
-}
+process.env = { ...process.env, ...envConfig.parsed };
 
 // --- Types ---
 interface Provider {
@@ -87,12 +83,12 @@ const setupPageListeners = (page: Page) => {
 // --- Test Suite ---
 test('AI Provider Access Tests', async ({ page }, testInfo) => {
   await test.step('login to extention', async () => {
-    await page.waitForTimeout(5000); 
+    await page.waitForTimeout(5000);
     await page.goto(`chrome-extension://iidnankcocecmgpcafggbgbmkbcldmno/html/popup.html`);
-    await page.locator('#apiDomain').click({timeout:15000});
+    await page.locator('#apiDomain').click({ timeout: 15000 });
     await page.locator('#apiDomain').fill(process.env.DOMAIN);
-    await page.locator('#apiKey').click({timeout:15000});
-    await page.locator('#saveButton').click({timeout:15000});
+    await page.locator('#apiKey').click({ timeout: 15000 });
+    await page.locator('#saveButton').click({ timeout: 15000 });
     await page.waitForTimeout(5000); // need chack network auth event
   });
   for (const provider of PROVIDERS) {
@@ -105,7 +101,7 @@ test('AI Provider Access Tests', async ({ page }, testInfo) => {
 
     // Test Steps
     await test.step('open provider url', async () => {
-      await page.goto(`http://${provider.domain}`, {timeout:15000});
+      await page.goto(`http://${provider.domain}`, { timeout: 15000 });
     });
 
     await test.step('check access message', async () => {
