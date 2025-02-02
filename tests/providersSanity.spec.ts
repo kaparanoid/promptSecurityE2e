@@ -81,7 +81,7 @@ const setupPageListeners = (page: Page) => {
 test.describe('AI Provider Access Tests', async () => {
   
   PROVIDERS.forEach(provider => {
-    test(`${provider.name} Access Tests`, async ({ page }, testInfo) => { // Removed explicit browser setup and pass page
+    test(`${provider.name} Access Tests`, async ({ page }, testInfo) => {
 
 
       await test.step('login to extention', async () => {
@@ -92,6 +92,7 @@ test.describe('AI Provider Access Tests', async () => {
         await page.locator('#apiKey').click();
         await page.locator('#apiKey').fill(process.env.KEY);
         await page.getByRole('button', { name: 'Save' }).click();
+        await page.waitForTimeout(5000); // need chack network auth event
       });
 
       // Setup
