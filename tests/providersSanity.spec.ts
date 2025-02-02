@@ -92,7 +92,6 @@ test.describe('AI Provider Access Tests', async () => {
         await page.locator('#apiKey').click();
         await page.locator('#apiKey').fill(process.env.KEY);
         await page.getByRole('button', { name: 'Save' }).click();
-        await page.pause()
       });
 
       // Setup
