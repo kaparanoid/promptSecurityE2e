@@ -51,6 +51,9 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           files: playwright-report/**/*.xml
 
+      - name: Check files before upload
+        run: ls -al playwright-report/
+        
       - name: Upload HTML Report as Artifact
         uses: actions/upload-artifact@v4
         if: always()
@@ -67,3 +70,6 @@ jobs:
             🎭 **Playwright Test Report** is available:  
             👉 [HTML Report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/)
             👉 [HTML Report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/playwright-report)
+            🎭 **Playwright Test Report** is available:  
+            👉 [HTML Report](https://github.com/${{ github.repository }}/suites/${{ github.run_id }}/artifacts/${{ steps.upload-playwright-html-report.outputs.artifact_id }})
+            👉 [Direct Link to index.html](https://github.com/${{ github.repository }}/suites/${{ github.run_id }}/artifacts/${{ steps.upload-playwright-html-report.outputs.artifact_id }}/index.html)
