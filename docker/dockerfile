@@ -7,4 +7,6 @@ ENV DISPLAY=:99
 RUN Xvfb $DISPLAY -screen 0 1920x1080x24 &
 WORKDIR /app
 RUN npx playwright install --with-deps chromium chrome
+RUN chown -R 1000:1000 /app
+USER 1000
 CMD ["bash", "-c", "npm run xvfb:test"]
