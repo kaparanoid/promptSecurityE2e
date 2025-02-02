@@ -54,14 +54,6 @@ jobs:
       - name: Check files before upload
         if: always()
         run: ls -al playwright-report/
-        
-      - name: pload HTML Report as ArtifactU
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: playwright-html-report
-          path: playwright-report/index.html
-          retention-days: 30
 
       - name: Comment PR with HTML Report Link
         if: always()
@@ -69,6 +61,9 @@ jobs:
         with:
           message: |
             🎭 **Playwright Test Report** is available:  
-            👉 [HTML Report](https://github.com/${{ github.repository }}/suites/${{ github.run_id }}/artifacts/${{ steps.upload-playwright-html-report.outputs.artifact_id }})
-            👉 [Direct Link to index.html](https://github.com/${{ github.repository }}/suites/${{ github.run_id }}/artifacts/${{ steps.upload-playwright-html-report.outputs.artifact_id }}/index.html)
-            👉 [HTML Report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/${{ steps.upload-playwright-html-report.outputs.artifact_id }})
+          message: |
+            🎭 **Playwright Test Report** is available:
+            
+            👉 [Download ZIP](https://github.com/${{ github.repository }}/suites/${{ github.run_id }}/artifacts/${{ steps.upload-report.outputs.artifact_id }})
+            
+            ℹ️ To view the HTML report, download the ZIP and extract it. Then, open `index.html` in your browser.
