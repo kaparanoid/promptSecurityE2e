@@ -66,3 +66,4 @@ jobs:
           message: |
             🎭 **Playwright Test Report** is available:  
             👉 [HTML Report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/)
+            👉 [HTML Report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/playwright-report)
