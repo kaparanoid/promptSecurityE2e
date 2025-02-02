@@ -1,76 +1,39 @@
 name: Playwright Tests
-
 on:
   push:
-    branches: [main, master]
+    branches: [ main, master ]
   pull_request:
-    branches: [main, master]
-
-permissions:
-  contents: read
-  pull-requests: write  # Required for commenting on PRs
-
+    branches: [ main, master ]
 jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+    - name: npm install
+      run: yarn
 
-      - name: Install Dependencies
-        run: yarn install --frozen-lockfile
+    - name: Build Docker Image
+      run: docker build -t playwright:1.1 docker/
 
-      - name: Build Docker Image
-        run: docker build -t playwright:1.1 docker/
+    - name: Set correct permissions
+      run: sudo chown -R 1000:1000 $GITHUB_WORKSPACE
 
-      - name: Set Correct Permissions
-        run: sudo chown -R 1000:1000 $GITHUB_WORKSPACE
+    - name: Run Playwright tests in Docker
+      run: |
+        docker run -t --rm -v $(pwd):/app -e DOMAIN="${{ secrets.DOMAIN }}" -e KEY="${{ secrets.KEY }}" -u 1000 playwright:1.1 bash -c "npm run xvfb:test"
 
-      - name: Run Playwright Tests in Docker
-        run: |
-          docker run -t --rm -v "$(pwd)":/app \
-            -e DOMAIN="${{ secrets.DOMAIN }}" \
-            -e KEY="${{ secrets.KEY }}" \
-            -u 1000 playwright:1.1 \
-            bash -c "npm run xvfb:test"
+    - uses: actions/upload-artifact@v4
+      if: ${{ !cancelled() }}
+      with:
+        name: playwright-report
+        path: playwright-report/
+        retention-days: 30
 
-      - name: Upload Playwright Report
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: playwright-report
-          path: playwright-report/
-          retention-days: 30
-
-      - name: Install GitHub CLI
-        run: |
-          sudo apt-get update && sudo apt-get install -y gh
-        if: github.event_name == 'pull_request'
-
-      - name: Parse Test Results and Comment on PR
-        if: github.event_name == 'pull_request'
-        run: |
-          # Parse JUnit report
-          if [ -f playwright-report/results.xml ]; then
-            test_results=$(xmlstarlet sel -t -m "//testsuite" -v "concat(@name, ': ', @tests, ' tests, ', @failures, ' failures, ', @errors, ' errors, ', @skipped, ' skipped')" playwright-report/results.xml)
-            gh pr comment ${{ github.event.pull_request.number }} -b "## Playwright Test Results\n${test_results}"
-          else
-            gh pr comment ${{ github.event.pull_request.number }} -b "## Playwright Test Results\n⚠️ No results found!"
-          fi
-
-      - name: Install gh-pages
-        if: github.event_name != 'pull_request'
-        run: npm install gh-pages
-
-      - name: Deploy HTML Report to GitHub Pages
-        if: github.event_name != 'pull_request'
-        run: |
-          touch playwright-report/html-report/.nojekyll
-          npx gh-pages -d playwright-report/html-report \
-            -r "https://github.com/${{ github.repository }}.git" \
-            -b gh-pages
+    - name: Publish Test Results
+      uses: EnricoMi/publish-unit-test-result-action@v2
+      if: always()
+      with:
+        files: |
+          playwright-report/**/*.xml
