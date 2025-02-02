@@ -65,5 +65,7 @@ jobs:
         with:
           message: |
             🎭 **Playwright Test Report** is available:  
-            👉 [HTML Report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/)
-            👉 [HTML Report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/playwright-report)
+            👉 **Download it from GitHub Actions Artifacts**  
+            1. Go to [Actions](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})  
+            2. Click on `playwright-html-report`  
+            3. Download and open `index.html`  
