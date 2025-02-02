@@ -10,12 +10,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+
+    - name: npm install
+      run: yarn
+
     - name: Build Docker Image
       run: docker build -t playwright:1.1 docker/
 
     - name: Run Playwright tests in Docker
       run: |
-        docker run --rm -v $(pwd):/app -e DOMAIN="${{ secrets.DOMAIN }}" -e KEY="${{ secrets.KEY }}" -u 1000 playwright:1.1 bash -c "yarn playwright test"
+        docker run -it --rm -v $(pwd):/app -e DOMAIN="${{ secrets.DOMAIN }}" -e KEY="${{ secrets.KEY }}" -u 1000 playwright:1.1 bash -c "npx playwright test"
 
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
