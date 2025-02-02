@@ -85,9 +85,9 @@ test.describe('AI Provider Access Tests', () => {
       await test.step('Login to extension', async () => {
         await page.goto(`chrome-extension://iidnankcocecmgpcafggbgbmkbcldmno/html/popup.html`);
         await page.locator('#apiDomain').click({ timeout: 15000 });
-        await page.locator('#apiDomain').fill(process.env.DOMAIN);
+        await page.locator('#apiDomain').fill(process.env.DOMAIN as string);
         await page.locator('#apiKey').click({ timeout: 15000 });
-        await page.locator('#apiKey').fill(process.env.KEY);
+        await page.locator('#apiKey').fill(process.env.KEY as string);
         await page.locator('#saveButton').click({ timeout: 15000 });
       });
 
@@ -106,8 +106,8 @@ test.describe('AI Provider Access Tests', () => {
 
         if (provider.isBlocked) {
           // Expectations for blocked providers
-          await expect(accessDeniedLocator).toBeVisible({ timeout: UI_TIMEOUT });
-          await expect(page.locator('html')).toMatchAriaSnapshot(`
+          await expect(accessDeniedLocator, `Expected "${provider.name}" to display the access denied message`).toBeVisible({ timeout: UI_TIMEOUT });
+          await expect(page.locator('html'), `Expected "${provider.name}" to have specific aria snapshot`).toMatchAriaSnapshot(`
               - document:
                 - img
                 - text: Access Denied
@@ -123,13 +123,13 @@ test.describe('AI Provider Access Tests', () => {
 
           // Validate URL parameters
           const searchParams = Object.fromEntries(new URL(page.url()).searchParams);
-          expect(searchParams.domain).toContain(provider.domain);
-          expect(searchParams.type).toBe('blockPage');
-          expect(searchParams.canBypass).toBe('Allow');
+          expect(searchParams.domain, `Expected URL for "${provider.name}" to contain domain`).toContain(provider.domain);
+          expect(searchParams.type, `Expected URL for "${provider.name}" to contain type "blockPage"`).toBe('blockPage');
+          expect(searchParams.canBypass, `Expected URL for "${provider.name}" to contain canBypass "Allow"`).toBe('Allow');
         } else {
           // Expectations for unblocked providers
-          await expect(accessDeniedLocator).not.toBeVisible({ timeout: UI_TIMEOUT });
-          expect(await page.locator(provider.selectors.textbox).first()).toBeVisible();
+          await expect(accessDeniedLocator, `Expected "${provider.name}" to NOT display the access denied message`).not.toBeVisible({ timeout: UI_TIMEOUT });
+          expect(await page.locator(provider.selectors.textbox).first(), `Expected textbox for "${provider.name}" to be visible`).toBeVisible();
         }
       });
 
