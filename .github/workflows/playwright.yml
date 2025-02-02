@@ -38,6 +38,7 @@ jobs:
 
       - name: Upload Playwright Report
         uses: actions/upload-artifact@v4
+        id: upload-report
         if: always()
         with:
           name: playwright-report
@@ -62,6 +63,6 @@ jobs:
           message: |
             🎭 **Playwright Test Report** is available:
             
-            👉 [Download ZIP](https://github.com/${{ github.repository }}/suites/${{ github.run_id }}/artifacts/${{ steps.upload-report.outputs.artifact_id }})
-            
+            👉 [Download ZIP](${{ steps.upload-report.outputs.artifact-url }})
+
             ℹ️ To view the HTML report, download the ZIP and extract it. Then, open `index.html` in your browser.
