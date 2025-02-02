@@ -22,7 +22,7 @@ jobs:
 
     - name: Run Playwright tests in Docker
       run: |
-        docker run -t --rm -v $(pwd):/app -e DOMAIN="${{ secrets.DOMAIN }}" -e KEY="${{ secrets.KEY }}" -u 1000 playwright:1.1 bash -c "xvfb-run npx playwright test"
+        docker run -t --rm -v $(pwd):/app -e DOMAIN="${{ secrets.DOMAIN }}" -e KEY="${{ secrets.KEY }}" -u 1000 playwright:1.1 bash -c "npm run xvfb:test"
 
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
