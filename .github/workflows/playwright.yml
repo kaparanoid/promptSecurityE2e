@@ -10,20 +10,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: lts/*
-    - name: Install dependencies
-      run: npm install -g yarn && yarn
-    - name: Install Playwright Browsers
-      run: yarn playwright install --with-deps
-    - name: Install xvfb
-      run: sudo apt-get install -y xvfb
-    - name: Run Playwright tests
+
+    - name: npm install
+      run: yarn
+
+    - name: Build Docker Image
+      run: docker build -t playwright:1.1 docker/
+
+    - name: Set correct permissions
+      run: sudo chown -R 1000:1000 $GITHUB_WORKSPACE
+
+    - name: Run Playwright tests in Docker
       run: |
-        export DOMAIN="${{ secrets.DOMAIN }}"
-        export KEY="${{ secrets.KEY }}"
-        xvfb-run yarn playwright test
+        docker run -t --rm -v $(pwd):/app -e DOMAIN="${{ secrets.DOMAIN }}" -e KEY="${{ secrets.KEY }}" -u 1000 playwright:1.1 bash -c "npm run xvfb:test"
+
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
