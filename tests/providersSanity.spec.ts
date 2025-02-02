@@ -1,9 +1,7 @@
 import { test, expect } from './fixtures';
 import fs from 'fs';
 import { config } from 'dotenv'
-const envConfig = config();
-
-process.env = { ...process.env, ...envConfig.parsed };
+import 'dotenv/config'
 
 // --- Types ---
 interface Provider {
