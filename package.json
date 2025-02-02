@@ -8,5 +8,14 @@
     "@playwright/test": "^1.50.1",
     "@types/node": "^22.13.0"
   },
-  "scripts": {}
+  "scripts": {
+    "test": "./node_modules/.bin/playwright test",
+    "docker:build": "cd docker;docker build -t playwright:1.1 .",
+    "docker:test": "docker run -it --rm -v $(pwd):/app -u 1000 playwright:1.1",
+    "xvfb:test":"DISPLAY=:0 xvfb-run ./node_modules/.bin/playwright test",
+    "reports":"npx playwright show-report"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7"
+  }
 }

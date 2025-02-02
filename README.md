@@ -2,10 +2,10 @@
 
 This test suite verifies access to various AI providers.
 
-**Local execution:**
-1. Ensure Playwright and dependencies are installed.
-2. Start a Chrome instance with remote debugging enabled (e.g., `chrome --remote-debugging-port=9222`).
-3. Run `npx playwright test`.
+**Docker execution:**
+1. update .env.example to .env
+2. npm docker:build
+3. npm docker:test
 
 **Known Bugs:**
 - Perplexity AI URLs may include `www.` prefix, while others don't.

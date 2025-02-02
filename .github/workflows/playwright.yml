@@ -17,8 +17,13 @@ jobs:
       run: npm install -g yarn && yarn
     - name: Install Playwright Browsers
       run: yarn playwright install --with-deps
+    - name: Install xvfb
+      run: sudo apt-get install -y xvfb
     - name: Run Playwright tests
-      run: yarn playwright test
+      run: |
+        export DOMAIN="${{ secrets.DOMAIN }}"
+        export KEY="${{ secrets.KEY }}"
+        xvfb-run yarn playwright test
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:

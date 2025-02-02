@@ -1,0 +1,10 @@
+FROM mcr.microsoft.com/playwright
+RUN apt-get update && apt-get install -y \
+    xvfb \
+    --no-install-recommends && \
+    rm -rf /var/lib/apt/lists/*
+ENV DISPLAY=:99
+RUN Xvfb $DISPLAY -screen 0 1920x1080x24 &
+WORKDIR /app
+RUN npx playwright install --with-deps chromium chrome
+CMD ["bash", "-c", "npm run xvfb:test"]
