@@ -60,8 +60,6 @@ jobs:
         uses: thollander/actions-comment-pull-request@v3
         with:
           message: |
-            🎭 **Playwright Test Report** is available:  
-          message: |
             🎭 **Playwright Test Report** is available:
             
             👉 [Download ZIP](https://github.com/${{ github.repository }}/suites/${{ github.run_id }}/artifacts/${{ steps.upload-report.outputs.artifact_id }})
