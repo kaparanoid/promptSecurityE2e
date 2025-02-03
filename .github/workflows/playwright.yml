@@ -33,8 +33,9 @@ jobs:
             -v $(pwd):/app \
             -e DOMAIN="${{ secrets.DOMAIN }}" \
             -e KEY="${{ secrets.KEY }}" \
+            -e EXTENSION_ID="iidnankcocecmgpcafggbgbmkbcldmno" \
             -u 1000 \
-            playwright:1.1 bash -c "yarn xvfb:test"
+            playwright:1.1
 
       - name: Upload Playwright Report
         uses: actions/upload-artifact@v4
