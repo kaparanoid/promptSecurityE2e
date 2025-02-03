@@ -1,5 +1,8 @@
 import { test as base, chromium, type BrowserContext } from '@playwright/test';
 import path from 'path';
+import * as dotenv from 'dotenv'
+dotenv.config()
+
 
 export const test = base.extend<{
   context: BrowserContext;
