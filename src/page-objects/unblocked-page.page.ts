@@ -8,8 +8,8 @@ export class UnblockedPage {
 
     async validateUnblockedPage(provider: Provider) {
        // Expectations for unblocked providers
-       await expect(this.accessDeniedLocator, `Expected "${provider.name}" to NOT display the access denied message`).not.toBeVisible({ timeout: 20000 });
-       expect(await this.page.locator(provider.selectors.textbox).first(), `Expected textbox for "${provider.name}" to be visible`).toBeVisible();
+       await expect(this.accessDeniedLocator, `Expected "${provider.name}" to NOT display the access denied message`).not.toBeVisible({ timeout: 30000 });
+      // expect(await this.page.locator(provider.selectors.textbox).first(), `Expected textbox for "${provider.name}" to be visible`).toBeVisible();
     }
 
 

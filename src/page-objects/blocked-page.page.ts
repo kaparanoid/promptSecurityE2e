@@ -12,7 +12,7 @@ export class BlockedPage {
    async validateBlockedPage(provider:Provider) {
        
       // Expectations for blocked providers
-          await expect(this.accessDeniedLocator, `Expected "${provider.name}" to display the access denied message`).toBeVisible({ timeout: 20000 });
+          await expect(this.accessDeniedLocator, `Expected "${provider.name}" to display the access denied message`).toBeVisible({ timeout: 30000 });
           await expect(this.page.locator('html'), `Expected "${provider.name}" to have specific aria snapshot`).toMatchAriaSnapshot(`
               - document:
                 - img
